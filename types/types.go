@@ -45,3 +45,9 @@ type Player struct {
 	Conn *websocket.Conn
 	Game PlayerData
 }
+
+type WebSocketError struct {
+	Type string `json:"type"`
+	StatusCode uint `json:"statusCode"`
+	Message string `json:"message"`
+}

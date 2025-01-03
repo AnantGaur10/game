@@ -3,6 +3,7 @@ package services
 import (
 	"fmt"
 	"game/types"
+	"log"
 	"sync"
 	"time"
 
@@ -29,13 +30,13 @@ func (rs *RoomService) generateRoomID() string {
 	return uuid.New().String()
 }
 
-func (rs *RoomService) CreateRoom() (string,error) {
+func (rs *RoomService) CreateRoom() (string, error) {
 
 	Players, err := rs.qs.GetPlayersForRoom()
 
 	if err != nil {
 		fmt.Println("Not Enough Players")
-		return "",err
+		return "", err
 	}
 
 	var room types.Room
@@ -56,7 +57,7 @@ func (rs *RoomService) CreateRoom() (string,error) {
 	rs.mu.Unlock()
 	defer func() {
 		rs.mu.Lock()
-			delete(rs.rooms,room.ID)
+		delete(rs.rooms, room.ID)
 		rs.mu.Unlock()
 	}()
 	for _, player := range Players {
@@ -68,11 +69,11 @@ func (rs *RoomService) CreateRoom() (string,error) {
 
 		player.Conn.WriteJSON(message)
 	}
-	return room.ID,nil
+	log.Println("Room has been created")
+	return room.ID, nil
 	// go rs.HandleRoom(&room)
 }
 
-func(rs *RoomService) HandleRoom(roomID string) {
-	
+func (rs *RoomService) HandleRoom(roomID string) {
 
 }
